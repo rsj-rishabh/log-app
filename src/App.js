@@ -9,7 +9,7 @@ function App() {
     let data = [];
     try {
       const response = await fetch('api/v1/logs');
-
+      console.log(response);
       data = await response.json();
     } catch (error) {
       console.log(error);
