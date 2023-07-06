@@ -8,11 +8,11 @@ function App() {
   const fetchLogs = async () => {
     let data = [];
     try {
-      const response = await fetch('api/v1/logs', {
-        cors: false,
-      });
+      const response = await fetch('api/v1/logs');
+
       data = await response.json();
     } catch (error) {
+      console.log(error);
       alert(error);
     }
 
