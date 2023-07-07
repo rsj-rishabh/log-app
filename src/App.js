@@ -1,44 +1,50 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function App() {
   const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchLogs = async () => {
+  useEffect(() => {
+    fetchPosts(currentPage);
+  }, [currentPage]);
+
+  const fetchPosts = async (page) => {
     try {
-      const response = await fetch('http://18.204.239.18/api/v1/logs');
-      if (response.status !== 200) {
-        console.log("Error: " + response.status);
-      }
-      
-      const data = await response.json();
-
-      if (data?.length !== 0) {
-        setLogs(data);
-        setLoading(false);
-      }
+      const response = await axios.get(`http://18.204.239.18/api/v1/logs`, {
+        params: { page: page },
+      });
+      const { data, headers } = response;
+      setLogs(data);
+      setTotalPages(Number(headers['x-total-pages']));
 
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  useEffect(() => {
-    fetchLogs();
-  }, []);
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
-  if (loading) {
-    return (
-      <div className="App">
-        <h1>Log App</h1>
-        <p>Loading...</p>
-      </div>
-    );
-  } else {
-    return (
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  return (
       <div>
         <h1 className="App">Log App</h1>
+        <hr></hr>
+        <div className="App">
+          <button onClick={goToPreviousPage}>Previous</button>
+          <button onClick={goToNextPage}>Next</button>
+        </div>
         <hr></hr>
         <div>
           {
@@ -64,7 +70,6 @@ function App() {
         </div>
       </div>
     );
-  }
 }
 
 export default App;
