@@ -6,19 +6,21 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   const fetchLogs = async () => {
-    let data = [];
     try {
-      const response = await fetch('api/v1/logs');
-      console.log(response);
-      data = await response.json();
+      const response = await fetch('http://18.204.239.18/api/v1/logs');
+      if (response.status !== 200) {
+        console.log("Error: " + response.status);
+      }
+      
+      const data = await response.json();
+
+      if (data?.length !== 0) {
+        setLogs(data);
+        setLoading(false);
+      }
+
     } catch (error) {
       console.log(error);
-      alert(error);
-    }
-
-    if (data.length !== 0) {
-      setLogs(data);
-      setLoading(false);
     }
   }
 
