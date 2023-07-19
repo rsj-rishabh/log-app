@@ -8,12 +8,13 @@ function App() {
   const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
-    fetchPosts(currentPage);
+    // fetchPosts(currentPage);
+    console.log('Fake function call.')
   }, [currentPage]);
 
   const fetchPosts = async (page) => {
     try {
-      const response = await axios.get(`http://18.204.239.18/api/v1/logs`, {
+      const response = await axios.get(`http://<hostname>/api/v1/logs`, {
         params: { page: page },
       });
       const { data, headers } = response;
@@ -42,6 +43,7 @@ function App() {
         <h1 className="App">Log App</h1>
         <hr></hr>
         <div className="App">
+          <div>AWS Server has been shutdown. No Data will be shown here.</div>
           <button onClick={goToPreviousPage}>Previous</button>
           <button onClick={goToNextPage}>Next</button>
         </div>
